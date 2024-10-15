@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # SCRIPT FOR SHORTCUT TO START SPOTDL
-SPOTDL_DIR="/home/$USER/Documents/Projects/spotdl"
+SPOTDL_DIR="/home/$USER/Documents/Projects/musicc"
 echo "Moving to $SPOTDL_DIR"
 cd $SPOTDL_DIR
 

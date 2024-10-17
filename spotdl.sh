@@ -18,36 +18,16 @@ if [[ -d $VENV ]]; then
 fi
 
 # Using the PyVenv as a source
-# (to access the SpotDL pip)
-echo $VENV
 source "$VENV/bin/activate"
 
-# Checking necessary packages
-pip freeze -r requirements.txt | echo "SpotDL not installed!"
-
-echo "Install SpotDL? (y/n)"
-read input
-
-while [[ $input != [YyNn] ]]
-  do
-      echo "y/n only, please."
-      read input
-  done
-
-if [[ $input == [Yy] ]]; then
-  pip install spotdl
-else
-  exit 0
-fi
+# TODO: Check installed dependencies and weigh that against what needs to be installed.
+# Then, install if needed.
 
 # User Input
 echo "Enter URL of Spotify playlist to download:"
 read url
 
 spotdl $url
-
-# Sort Downloaded Music
-format=*.mp3
 
 # Script Finished
 exit 0

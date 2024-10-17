@@ -1,44 +1,53 @@
 #!/bin/bash
+# ---
+# This script automatically downloads and sorts the spotify playlist
+# specified by the user.
 
-# SCRIPT FOR SHORTCUT TO START SPOTDL
-SPOTDL_DIR="/home/$USER/Documents/Projects/musicc"
-echo "Moving to $SPOTDL_DIR"
-cd $SPOTDL_DIR
+# Directory Shorthands
+VENV="$PWD/venv"
+MUSIC_DIR="/home/$USER/Music"
 
-# check if virtual environment exists
-if [[ ! -d "venv" ]];
-    then
-        echo "Creating venv..."
-        python3 -m venv venv
-        echo "venv created."
-    else
-        echo "venv found."
+# Checking for Python Virtual Environment
+if [[ -d $VENV ]]; then
+  echo "Venv found @"
+  else
+    # Creating PyVenv if doesn't exist
+    echo "Creating Venv."
+    python3 -m venv venv
+    echo "Venv created @"
 fi
 
-# activate the virtual environment
-source venv/bin/activate
-echo "venv activated at $(which pip)"
+# Using the PyVenv as a source
+# (to access the SpotDL pip)
+echo $VENV
+source "$VENV/bin/activate"
 
-# get the Spotify URL from user
-echo "Enter Spotify URL (or 'sort' to skip to sort): "
-read URL
+# Checking necessary packages
+pip freeze -r requirements.txt | echo "SpotDL not installed!"
 
-if [[ $URL != "sort" ]];
-    then
-        # download the song/playlist
-        spotdl $URL
+echo "Install SpotDL? (y/n)"
+read input
 
-        # wait until the download is complete
-        echo "Download complete."
-    else
-        echo "Skipping to sort."
+while [[ $input != [YyNn] ]]
+  do
+      echo "y/n only, please."
+      read input
+  done
+
+if [[ $input == [Yy] ]]; then
+  pip install spotdl
+else
+  exit 0
 fi
 
-# sort the files, move them to the respective folders
-python3 sort.py $SPOTDL_DIR
+# User Input
+echo "Enter URL of Spotify playlist to download:"
+read url
 
-# deactivate the virtual environment
-deactivate
+spotdl $url
 
-# exit the script
+# Sort Downloaded Music
+format=*.mp3
+
+# Script Finished
 exit 0

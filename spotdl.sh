@@ -33,7 +33,7 @@ fi
 for f in *.mp3; do
 
   # extract artist from ID3v2 output
-  artist="$(id3v2 -l echo "$f" | grep TPE1 | cut -b 38-)"
+  artist="$(id3v2 -l "$f" | grep TPE1 | cut -b 38-)"
   artist_dir="$MUSIC_DIR/$artist"
 
   # make a directory for the artist if it doesn't exist

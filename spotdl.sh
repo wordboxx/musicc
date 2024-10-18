@@ -5,6 +5,13 @@ CURR_DIR="$PWD"
 VENV="$CURR_DIR/venv"
 MUSIC_DIR="/home/$USER/Music"
 
+# ID3v2 Management
+# extract text from id3v2 debian package manager check
+id3v2_status="$(dpkg -s id3v2 | grep "installed" | cut -b 20-)"
+if [[ ! $id3v2_status == "installed" ]]; then
+  sudo apt install id3v2
+fi
+
 # Python Venv Management
 if [[ ! -d $VENV ]]; then
   echo "Creating Venv."

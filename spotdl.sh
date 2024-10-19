@@ -36,12 +36,10 @@ YouTube URL: Will download the song/playlist. (Manual sort)
 # - Get input from user.
 read input
 
-# - If user's input contains "spotify," use SpotDL and
-# - sort MP3s with their metadata.
+# - If user's input contains "spotify," use SpotDL to download.
 if [[ $input == *"spotify"* ]]; then
 	echo "Downloading from Spotify."
 	spotdl $input
-	sort
 
 # - If user's input contains "youtube," use yt-dlp and
 # - direct downloads to "yt-dlp" directory in "Music."
@@ -63,40 +61,31 @@ elif [[ $input == *"youtube"* ]]; then
 
 	# - Move back to script's directory.
 	cd -
-
-# - If user's input is "sort," sort MP3s in folder based on their metadata.
-elif [[ $input == "sort" ]]; then
-	echo "Sorting MP3s."
-	sort
 fi
 
-# Functions
-sort() {
-	# Processing Each Downloaded MP3
-	for f in *.mp3; do
+# Processing Each Downloaded MP3
+for f in *.mp3; do
+	# extract artist from ID3v2 output
+	artist="$(id3v2 -l "$f" | grep TPE1 | cut -b 38-)"
+	artist_dir="$MUSIC_DIR/$artist"
 
-		# extract artist from ID3v2 output
-		artist="$(id3v2 -l "$f" | grep TPE1 | cut -b 38-)"
-		artist_dir="$MUSIC_DIR/$artist"
+	# make a directory for the artist if it doesn't exist
+	if [[ ! -d $artist_dir ]]; then
+		mkdir "$artist_dir"
+	fi
 
-		# make a directory for the artist if it doesn't exist
-		if [[ ! -d $artist_dir ]]; then
-			mkdir "$artist_dir"
-		fi
+	# extract album name from ID3v2 output
+	album="$(id3v2 -l "$f" | grep TALB | cut -b 32-)"
+	album_dir="$artist_dir/$album"
 
-		# extract album name from ID3v2 output
-		album="$(id3v2 -l "$f" | grep TALB | cut -b 32-)"
-		album_dir="$artist_dir/$album"
+	# make a directory for the album in the artist directory if it doesn't exist
+	if [[ ! -d $album_dir ]]; then
+		mkdir "$album_dir"
+	fi
 
-		# make a directory for the album in the artist directory if it doesn't exist
-		if [[ ! -d $album_dir ]]; then
-			mkdir "$album_dir"
-		fi
-
-		# move MP3 to album directory within artist directory
-		mv "$f" "$album_dir"
-	done
-}
+	# move MP3 to album directory within artist directory
+	mv "$f" "$album_dir"
+done
 
 # Script Finished
 exit 0

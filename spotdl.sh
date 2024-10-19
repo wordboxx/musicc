@@ -22,9 +22,18 @@ source "$VENV/bin/activate"
 echo "Venv activated @"
 echo $VENV
 
-# Download Songs User Inputs
-echo "Enter URL of Spotify playlist to download or "sort" to sort:"
+# Prompt for User Input
+echo """
+Spotify URL: Will download the song/playlist. (Metadata auto-sort)
+YouTube URL: Will download the song/playlist. (Metadata manual input, auto-sort)
+\"sort\"   : Skip downloading; will sort MP3s in this directory with the available metadata.
+"""
+
+# TODO: Check if URL has "spotify," "youtube," etc. Use yt-dlp if youtube.
+# then prompt user to input metadata. then sort based on that metadata
+# --- maybe if video chapters are available, separate into songs?
 read url
+# TODO: grep URL for matching stuff and make switch-case for options
 if [[ $url != "sort" ]]; then
   spotdl $url
 fi

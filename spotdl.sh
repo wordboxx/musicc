@@ -59,6 +59,9 @@ elif [[ $input == *"youtube"* ]]; then
 	echo "Downloading yt-dlp."
 	yt-dlp --split-chapters -x --audio-format mp3 $input
 
+	#TODO: eliminate redundant prefixes on chapters for easier
+	#	   tagging.
+
 	# - Move back to script's directory.
 	cd -
 fi
